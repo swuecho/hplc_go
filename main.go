@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	//        "strconv"
 )
 
 var (
@@ -24,12 +23,10 @@ func main() {
 	for _, f := range files {
 		sample_name, sample_data := get_data_from_file("./data/" + f.Name())
 		fmt.Printf("%s,", sample_name)
-		for key, amino := range aminos {
-			fmt.Println(key)
-			fmt.Println(amino)
-			fmt.Println(sample_data[amino])
-			//fmt.Println(sample_data)
+		for _, v:= range aminos {
+			fmt.Printf(" %s,", sample_data[v])
 		}
+       fmt.Println("")
 	}
 }
 
@@ -51,7 +48,7 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 		}
 
 		if strings.Contains(line, "Sample Name") {
-			sample_name := strings.Split(line, "\t")
+			sample_name = strings.Split(line, "\t")[1]
 		}
 
 		if strings.Contains(line, "Amount") {
@@ -65,11 +62,11 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 		if process_switch {
 			vec := strings.Split(line, "\t")
 			if len(vec) == 6 {
-				sample_data[vec[1]] = vec[5]
+            fmt.Printf("%s xx",strings.Trim(vec[5], "\n\""));
+				sample_data[strings.Trim(vec[1],"\"")] = vec[5]
 			}
 		}
 
 	}
-	return sample_name, sample_data
-
+	return 
 }
