@@ -11,9 +11,7 @@ import (
 )
 
 var (
-	data           []uint64
 	process_switch bool
-	sum            uint64 = 0
 	filename       string = "data/hello.txt"
 )
 
@@ -25,11 +23,12 @@ func main() {
 
 	for _, f := range files {
 		sample_name, sample_data := get_data_from_file("./data/" + f.Name())
-		fmt.Print(sample_name)
-		for _, amino := range aminos {
+		fmt.Printf("%s,", sample_name)
+		for key, amino := range aminos {
+			fmt.Println(key)
 			fmt.Println(amino)
 			fmt.Println(sample_data[amino])
-			fmt.Println(sample_data)
+			//fmt.Println(sample_data)
 		}
 	}
 }
@@ -53,7 +52,6 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 
 		if strings.Contains(line, "Sample Name") {
 			sample_name := strings.Split(line, "\t")
-			fmt.Println(sample_name[1])
 		}
 
 		if strings.Contains(line, "Amount") {
@@ -72,6 +70,6 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 		}
 
 	}
-	return
+	return sample_name, sample_data
 
 }
