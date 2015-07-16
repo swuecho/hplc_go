@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	//        "strconv"
@@ -14,13 +15,31 @@ var (
 	process_switch bool
 	sum            uint64 = 0
 	filename       string = "data/hello.txt"
-	m                     = make(map[string]string)
 )
 
 func main() {
+	files, _ := ioutil.ReadDir("./data")
+	aminos := []string{"ASP", "GLU", "ASN", "SER", "GLN", "HIS", "GLY", "THR", "CIT", "ARG", "b-ALA", "TAU", "ALA", "TYR", "TRP", "MET", "VAL", "PHE", "ILE", "LEU", "ORN", "LYS"}
+	fmt.Print(" ,")
+	fmt.Println(strings.Join(aminos, ","))
+
+	for _, f := range files {
+		sample_name, sample_data := get_data_from_file("./data/" + f.Name())
+		fmt.Print(sample_name)
+		for _, amino := range aminos {
+			fmt.Println(amino)
+			fmt.Println(sample_data[amino])
+			fmt.Println(sample_data)
+		}
+	}
+}
+
+func get_data_from_file(filename string) (sample_name string, sample_data map[string]string) {
+	sample_data = make(map[string]string)
 	file, _ := os.Open(filename)
 	defer file.Close()
 	r := bufio.NewReader(file)
+
 	for {
 
 		line, err := r.ReadString('\n')
@@ -48,11 +67,11 @@ func main() {
 		if process_switch {
 			vec := strings.Split(line, "\t")
 			if len(vec) == 6 {
-				m[vec[1]] = vec[5]
+				sample_data[vec[1]] = vec[5]
 			}
 		}
 
 	}
-	fmt.Println(m)
+	return
 
 }
