@@ -9,10 +9,7 @@ import (
 	"strings"
 )
 
-var (
-	process_switch bool
-	filename       string = "data/hello.txt"
-)
+
 
 func main() {
 	files, _ := ioutil.ReadDir("./data")
@@ -31,15 +28,15 @@ func main() {
 }
 
 func get_data_from_file(filename string) (sample_name string, sample_data map[string]string) {
+	var process_switch bool;
 	sample_data = make(map[string]string)
 	file, _ := os.Open(filename)
 	defer file.Close()
 	r := bufio.NewReader(file)
 
 	for {
-
-		line, err := r.ReadString('\n')
-
+		line, err := r.ReadString('\r')
+	//	fmt.Println(line)
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -62,11 +59,10 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 		if process_switch {
 			vec := strings.Split(line, "\t")
 			if len(vec) == 6 {
-            fmt.Printf("%s xx",strings.Trim(vec[5], "\n\""));
-				sample_data[strings.Trim(vec[1],"\"")] = vec[5]
+				sample_data[strings.Trim(vec[1],"\"")] = strings.Trim(strings.TrimSpace(vec[5]), "\"")
 			}
 		}
 
 	}
-	return 
+	return
 }
