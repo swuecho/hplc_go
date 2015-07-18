@@ -9,34 +9,19 @@ import (
 	"strings"
 )
 
-
-
-func main() {
-	files, _ := ioutil.ReadDir("./data")
-	aminos := []string{"ASP", "GLU", "ASN", "SER", "GLN", "HIS", "GLY", "THR", "CIT", "ARG", "b-ALA", "TAU", "ALA", "TYR", "TRP", "MET", "VAL", "PHE", "ILE", "LEU", "ORN", "LYS"}
-	fmt.Print(" ,")
-	fmt.Println(strings.Join(aminos, ","))
-
-	for _, f := range files {
-		sample_name, sample_data := get_data_from_file("./data/" + f.Name())
-		fmt.Printf("%s,", sample_name)
-		for _, v:= range aminos {
-			fmt.Printf(" %s,", sample_data[v])
-		}
-       fmt.Println("")
-	}
-}
-
 func get_data_from_file(filename string) (sample_name string, sample_data map[string]string) {
-	var process_switch bool;
+
+	var process_switch bool
+
 	sample_data = make(map[string]string)
+
 	file, _ := os.Open(filename)
 	defer file.Close()
 	r := bufio.NewReader(file)
 
 	for {
 		line, err := r.ReadString('\r')
-	//	fmt.Println(line)
+
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -59,10 +44,30 @@ func get_data_from_file(filename string) (sample_name string, sample_data map[st
 		if process_switch {
 			vec := strings.Split(line, "\t")
 			if len(vec) == 6 {
-				sample_data[strings.Trim(vec[1],"\"")] = strings.Trim(strings.TrimSpace(vec[5]), "\"")
+				sample_data[strings.Trim(vec[1], "\"")] = strings.Trim(strings.TrimSpace(vec[5]), "\"")
 			}
 		}
 
 	}
 	return
+}
+
+func main() {
+	files, _ := ioutil.ReadDir("./data")
+	aminos := []string{"ASP", "GLU", "ASN", "SER", "GLN", "HIS", "GLY", "THR", "CIT", "ARG", "b-ALA", "TAU", "ALA", "TYR", "TRP", "MET", "VAL", "PHE", "ILE", "LEU", "ORN", "LYS"}
+
+	// csv file header
+	fmt.Print(" ,")
+	fmt.Println(strings.Join(aminos, ","))
+  fmt.Print(",")
+
+	// aminos data
+	for _, f := range files {
+		sample_name, sample_data := get_data_from_file("./data/" + f.Name())
+		fmt.Printf("%s,", sample_name)
+		for _, v := range aminos {
+			fmt.Printf(" %s,", sample_data[v])
+		}
+		fmt.Println("")
+	}
 }

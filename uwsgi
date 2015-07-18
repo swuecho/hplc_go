@@ -1,0 +1,30 @@
+git clone https://github.com/unbit/uwsgi.git
+cd uwsgi
+git apply ../patch_debug.txt
+
+
+# move system perl out of the way
+# why? copied from jeff's code
+sudo mv /usr/lib64/perl5 /usr/lib64/perl5-orig
+sudo mv /usr/share/perl5 /usr/share/perl5-orig
+
+export UWSGI_EMBED_PLUGINS=emperor_mongodb
+python uwsgiconfig.py --build psgi
+
+# then strip the uwsgi binary for a smaller file:
+strip --strip-all uwsgi
+
+# shutdown uwsgi if it is running and copy new executable to uwsgi apps
+sudo systemctl stop uwsgi_admin
+sudo systemctl stop uwsgi_survey
+
+cp uwsgi /home/intellisurvey/versions/7.0/isapps/bin
+sudo systemctl start uwsgi_admin
+sudo systemctl start uwsgi_survey
+
+cd ..
+rm -rf uwsgi
+
+#move back
+sudo mv /usr/lib64/perl5-orig /usr/lib64/perl5
+sudo mv /usr/share/perl5-orig /usr/share/perl5
