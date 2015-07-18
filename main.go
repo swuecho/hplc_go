@@ -58,8 +58,8 @@ func main() {
 
 	// csv file header
 	fmt.Print(" ,")
-	fmt.Println(strings.Join(aminos, ","))
-  fmt.Print(",")
+	fmt.Print(strings.Join(aminos, ","))
+  fmt.Println(",")
 
 	// aminos data
 	for _, f := range files {
